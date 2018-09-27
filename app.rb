@@ -18,5 +18,5 @@ get '/' do
 end
 
 get '/counter' do
-  actual_counter
+  actual_counter.to_s
 end
