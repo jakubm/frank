@@ -1,13 +1,22 @@
 require 'sinatra'
 require 'redis'
 
-redis = Redis.new
+set :bind, '0.0.0.0'
+
+def actual_counter
+  host = 'redis'
+  begin
+    redis = Redis.new(host: host)
+    return redis.incr 'frank-counter'
+  rescue StandardError => e
+    return e.to_s
+  end
+end
 
 get '/' do
-  "<h1>Hello, world!</h2>Actual counter: #{redis.get 'frank-counter'}"
+  "<h1>Hello, world!</h2>Actual counter: #{actual_counter}"
 end
 
 get '/counter' do
-  counter = redis.incr 'frank-counter'
-  counter.to_s
+  actual_counter
 end
